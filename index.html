@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.emailjs.com/sdk/3.2/email.min.js"></script>
+</head>
+<body>
+    <h1>I'm EMAIL JS Proxy for Oblist B2b Order Confirmation Email</h1>
+<script>
+  emailjs.init('IDFHqtn6HP9qchv3q'); // put your EmailJS user ID here
+
+  window.addEventListener('message', (event) => {
+    // optionally verify event.origin for security
+
+    if (event.data.type === 'SEND_EMAIL') {
+      emailjs.send(event.data.serviceID, event.data.templateID, event.data.templateParams)
+        .then((response) => {
+          event.source.postMessage({ type: 'EMAIL_SENT', status: 'success', response }, event.origin);
+        })
+        .catch((error) => {
+          event.source.postMessage({ type: 'EMAIL_SENT', status: 'error', error: error.text || error }, event.origin);
+        });
+    }
+  });
+</script>
+</body>
+</html>
