@@ -9,18 +9,20 @@
   emailjs.init('IDFHqtn6HP9qchv3q'); // put your EmailJS user ID here
 
   window.addEventListener('message', (event) => {
-    // optionally verify event.origin for security
-
-    if (event.data.type === 'SEND_EMAIL') {
-      emailjs.send(event.data.serviceID, event.data.templateID, event.data.templateParams)
-        .then((response) => {
-          event.source.postMessage({ type: 'EMAIL_SENT', status: 'success', response }, event.origin);
-        })
-        .catch((error) => {
-          event.source.postMessage({ type: 'EMAIL_SENT', status: 'error', error: error.text || error }, event.origin);
-        });
+  console.log('Proxy page received message:', event.data);
+  if(event.data.type === 'SEND_EMAIL') {
+    emailjs.send(event.data.serviceID, event.data.templateID, event.data.templateParams)
+      .then((response) => {
+        console.log('Email sent, sending response back...');
+        event.source.postMessage({ type: 'EMAIL_SENT', status: 'success', response }, event.origin);
+      })
+      .catch((error) => {
+        console.error('Email send error:', error);
+        event.source.postMessage({ type: 'EMAIL_SENT', status: 'error', error: error.text || error }, event.origin);
+      });
     }
   });
+
 </script>
 </body>
 </html>
